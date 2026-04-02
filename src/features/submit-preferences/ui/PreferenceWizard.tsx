@@ -11,7 +11,7 @@ const ALLERGY_OPTIONS = ['卵', '乳', '小麦', 'えび', 'かに', 'そば', '
 type CategoryChoice = 'meat' | 'fish' | 'other';
 type CategoryUI = 'meat' | 'fish' | 'veggie' | 'anything';
 type PlaceChoice = 'dine-in' | 'takeout' | null;
-type BudgetChoice = '~1000' | '1000~1500' | '1500~' | 'any';
+type BudgetChoice = '~1000' | '~5000' | '~10000' | '10000~' | 'any';
 
 type PreferenceWizardProps = {
   sessionId: string;
@@ -259,15 +259,21 @@ export function PreferenceWizard({ sessionId }: PreferenceWizardProps) {
               />
               <SelectCard
                 emoji="💰💰"
-                label="1,000〜1,500円"
-                selected={budget === '1000~1500'}
-                onClick={() => setBudget('1000~1500')}
+                label="〜5,000円"
+                selected={budget === '~5000'}
+                onClick={() => setBudget('~5000')}
               />
               <SelectCard
                 emoji="💰💰💰"
-                label="1,500円〜"
-                selected={budget === '1500~'}
-                onClick={() => setBudget('1500~')}
+                label="〜10,000円"
+                selected={budget === '~10000'}
+                onClick={() => setBudget('~10000')}
+              />
+              <SelectCard
+                emoji="💎"
+                label="10,000円〜"
+                selected={budget === '10000~'}
+                onClick={() => setBudget('10000~')}
               />
               <SelectCard
                 emoji="🙆"

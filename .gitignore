@@ -1,0 +1,35 @@
+# MCP設定（トークン含む）
+.mcp.json
+
+# Claude Code ローカル設定
+.claude/settings.local.json
+
+# 環境変数
+.env*
+!.env.example
+
+# Node.js
+node_modules/
+/.pnp
+.pnp.*
+.next/
+out/
+/build
+/coverage
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS
+.DS_Store
+*.pem

@@ -13,7 +13,7 @@ export function VotePage() {
 
   const [session, setSession] = useState<Session | null>(null);
   const [memberId] = useState<string>(() =>
-    typeof window !== 'undefined' ? (localStorage.getItem('memberId') ?? '') : '',
+    typeof window !== 'undefined' ? (localStorage.getItem(`lunchy_member_${sessionId}`) ?? '') : '',
   );
   const [fetchError, setFetchError] = useState<string | null>(null);
 

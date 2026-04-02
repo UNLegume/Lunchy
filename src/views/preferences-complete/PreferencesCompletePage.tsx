@@ -13,7 +13,7 @@ export function PreferencesCompletePage() {
   const [isOrganizer, setIsOrganizer] = useState(false);
 
   useEffect(() => {
-    const memberId = localStorage.getItem('memberId');
+    const memberId = localStorage.getItem(`lunchy_member_${sessionId}`);
     if (!memberId || !sessionId) return;
 
     void apiGet<{ session: Session }>(`/api/sessions/${sessionId}`)

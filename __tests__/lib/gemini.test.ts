@@ -17,7 +17,7 @@ import type { AggregatedPreferences } from '@/lib/preference-service';
 
 const sampleAggregated: AggregatedPreferences = {
   category: 'meat',
-  budget: '~1000円',
+  budget: '~1000',
   allergies: ['卵'],
   avgHungerLevel: 7.0,
   places: [],
@@ -78,7 +78,7 @@ describe('buildPrompt', () => {
 
   it('予算が含まれるプロンプトを生成する', () => {
     const prompt = buildPrompt('渋谷駅', sampleAggregated);
-    expect(prompt).toContain('~1000円');
+    expect(prompt).toContain('1,000円以下');
   });
 
   it('アレルギーが含まれるプロンプトを生成する', () => {
@@ -100,6 +100,12 @@ describe('buildPrompt', () => {
   it('JSON配列の返却指示が含まれる', () => {
     const prompt = buildPrompt('渋谷駅', sampleAggregated);
     expect(prompt).toContain('JSON');
+  });
+
+  it('個人店優先の指示が含まれる', () => {
+    const prompt = buildPrompt('渋谷駅', sampleAggregated);
+    expect(prompt).toContain('チェーン店');
+    expect(prompt).toContain('個人経営');
   });
 });
 

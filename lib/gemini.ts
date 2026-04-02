@@ -3,8 +3,24 @@ import { AppError } from '@/lib/errors';
 import { aggregatePreferences, type AggregatedPreferences } from '@/lib/preference-service';
 import type { Candidate, Preference } from '@/lib/types';
 
+function budgetInstruction(budget: string): string {
+  switch (budget) {
+    case '~1000':
+      return '1人あたり1,000円以下の店を選んでください。';
+    case '~5000':
+      return '1人あたり1,000円〜5,000円程度の店を選んでください。1,000円未満の安い店は避けてください。';
+    case '~10000':
+      return '1人あたり5,000円〜10,000円程度の高級店を選んでください。5,000円以下の店は絶対に含めないでください。';
+    case '10000~':
+      return '1人あたり10,000円以上の最高級店を選んでください。10,000円未満の店は絶対に含めないでください。';
+    default:
+      return '予算の制約はありません。';
+  }
+}
+
 export function buildPrompt(location: string, aggregated: AggregatedPreferences): string {
   const allergyText = aggregated.allergies.length > 0 ? aggregated.allergies.join('、') : 'なし';
+  const budgetText = budgetInstruction(aggregated.budget);
 
   return `あなたはランチの店選びアシスタントです。
 以下の条件に合う飲食店を、Google Mapsのデータを使って3件提案してください。
@@ -14,8 +30,9 @@ export function buildPrompt(location: string, aggregated: AggregatedPreferences)
 【条件】
 - 現在ランチタイム営業中であること
 - カテゴリ: ${aggregated.category}（多数派の希望）
-- 予算: ${aggregated.budget}
+- 予算【重要】: ${budgetText}
 - アレルギー除外: ${allergyText}
+- 個人経営の店・独立店を優先すること。チェーン店（全国チェーンやフランチャイズ）は候補に含めないでください
 - 空腹度平均: ${aggregated.avgHungerLevel}/10（高い場合はボリュームのある店を優先）
 
 各候補について以下の情報を**必ずJSON配列**で返してください。JSON以外のテキストは含めないでください:

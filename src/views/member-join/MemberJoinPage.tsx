@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { JoinSessionForm } from '@/src/features/join-session';
-import { ErrorScreen } from '@/src/shared/ui';
+import { ErrorScreen, Spinner } from '@/src/shared/ui';
 import { apiGet } from '@/src/shared/api/client';
 import type { Session } from '@/lib/types';
 
@@ -38,7 +38,7 @@ export function MemberJoinPage() {
   if (status === 'loading') {
     return (
       <main className="flex items-center justify-center min-h-screen bg-[#F3F4F6]">
-        <p className="text-[#6B7280]">読み込み中...</p>
+        <Spinner text="読み込み中..." />
       </main>
     );
   }

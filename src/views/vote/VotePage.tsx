@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { VotePanel, RunoffPanel } from '@/src/features/cast-vote';
+import { Spinner } from '@/src/shared/ui';
 import type { Session } from '@/lib/types';
 
 export function VotePage() {
@@ -61,7 +62,7 @@ export function VotePage() {
         {fetchError ? (
           <p className="text-red-500">{fetchError}</p>
         ) : (
-          <p className="text-[#6B7280]">読み込み中...</p>
+          <Spinner text="読み込み中..." />
         )}
       </main>
     );

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, Button, ProgressBar } from '@/src/shared/ui';
+import { Card, Button, ProgressBar, Spinner } from '@/src/shared/ui';
 import { apiPost } from '@/src/shared/api/client';
 import type { Session } from '@/lib/types';
 
@@ -95,7 +95,7 @@ export function DashboardPage() {
         {fetchError ? (
           <p className="text-red-500">{fetchError}</p>
         ) : (
-          <p className="text-[#6B7280]">読み込み中...</p>
+          <Spinner text="読み込み中..." />
         )}
       </main>
     );
@@ -110,10 +110,7 @@ export function DashboardPage() {
   if (isClosing) {
     return (
       <main className="flex flex-col items-center justify-center min-h-screen bg-[#F3F4F6] px-4">
-        <div className="text-center">
-          <p className="text-4xl mb-4">🔍</p>
-          <p className="text-lg font-semibold text-[#1A1A1A]">お店を探しています...</p>
-        </div>
+        <Spinner text="お店を探しています..." />
       </main>
     );
   }

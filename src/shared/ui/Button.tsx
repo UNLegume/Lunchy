@@ -15,7 +15,7 @@ export function Button({
   disabled = false,
   variant = 'primary',
 }: ButtonProps) {
-  const baseClass = 'h-12 rounded-lg font-semibold text-base w-full transition-colors';
+  const baseClass = 'h-12 rounded-lg font-semibold text-base w-full transition-colors duration-200';
 
   const variantClass = disabled
     ? 'bg-gray-300 text-gray-400 cursor-not-allowed'

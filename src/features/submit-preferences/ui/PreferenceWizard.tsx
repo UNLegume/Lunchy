@@ -132,7 +132,7 @@ export function PreferenceWizard({ sessionId }: PreferenceWizardProps) {
                 value={otherAllergy}
                 onChange={(e) => setOtherAllergy(e.target.value)}
                 placeholder="例: いちご"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 text-base focus:outline-none focus:border-[#FF6B35]"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 text-base outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] transition-colors duration-200"
               />
             </div>
             <Button onClick={handleNext}>次へ</Button>

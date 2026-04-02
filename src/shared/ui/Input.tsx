@@ -18,7 +18,7 @@ export function Input({ label, placeholder, hint, value, onChange, error }: Inpu
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`border rounded-lg px-3.5 py-3 text-[15px] outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent ${
+        className={`border rounded-lg px-3.5 py-3 text-[15px] outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] transition-colors duration-200 ${
           error ? 'border-red-500' : 'border-gray-300'
         }`}
       />

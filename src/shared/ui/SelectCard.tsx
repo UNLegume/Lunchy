@@ -10,7 +10,7 @@ export function SelectCard({ emoji, label, selected, onClick }: SelectCardProps)
     'w-full flex items-center gap-3 px-4 py-4 rounded-xl border-2 cursor-pointer transition-all text-left';
   const stateClass = selected
     ? 'bg-[#FFF3ED] border-[#FF6B35] text-[#FF6B35]'
-    : 'bg-white border-gray-300 text-[#1A1A1A]';
+    : 'bg-white border-gray-300 text-[#1A1A1A] hover:border-gray-400';
 
   return (
     <button type="button" onClick={onClick} className={`${baseClass} ${stateClass}`}>

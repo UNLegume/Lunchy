@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ErrorScreen } from '@/src/shared/ui';
+import { ErrorScreen, Spinner } from '@/src/shared/ui';
 import type { Candidate } from '@/lib/types';
 import { WinnerCard } from './WinnerCard';
 
@@ -47,7 +47,7 @@ export function ResultPage() {
   if (!data) {
     return (
       <main className="flex flex-col items-center justify-center min-h-screen bg-[#F3F4F6] px-4">
-        <p className="text-[#6B7280]">読み込み中...</p>
+        <Spinner text="読み込み中..." />
       </main>
     );
   }
@@ -62,7 +62,10 @@ export function ResultPage() {
 
         <WinnerCard candidate={data.result} />
 
-        <Link href="/" className="text-sm text-[#6B7280] underline mt-2">
+        <Link
+          href="/"
+          className="text-sm text-gray-500 hover:text-gray-700 underline mt-2 transition-colors duration-200"
+        >
           トップへ戻る
         </Link>
       </div>

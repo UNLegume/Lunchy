@@ -1,4 +1,5 @@
 import { getSession as kvGetSession, setSession } from '@/lib/kv';
+import { generateCandidates } from '@/lib/gemini';
 import type { Member, Preference, Session } from '@/lib/types';
 import { AppError } from '@/lib/errors';
 
@@ -82,6 +83,33 @@ export async function submitPreferences(
   const updatedSession: Session = {
     ...session,
     preferences: updatedPreferences,
+  };
+
+  await setSession(sessionId, updatedSession);
+  return updatedSession;
+}
+
+export async function closeSession(sessionId: string, organizerId: string): Promise<Session> {
+  const session = await getSession(sessionId);
+
+  if (session.status !== 'gathering') {
+    throw new AppError('INVALID_STATUS', 'このセッションは既に締め切られています', 400);
+  }
+
+  if (session.organizerId !== organizerId) {
+    throw new AppError('UNAUTHORIZED', '幹事のみが締め切り操作を行えます', 403);
+  }
+
+  if (session.preferences.length === 0) {
+    throw new AppError('NO_PREFERENCES', '回答がありません', 400);
+  }
+
+  const candidates = await generateCandidates(session.location, session.preferences);
+
+  const updatedSession: Session = {
+    ...session,
+    candidates,
+    status: 'voting',
   };
 
   await setSession(sessionId, updatedSession);

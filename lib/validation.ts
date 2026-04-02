@@ -21,3 +21,7 @@ export const preferencesSchema = z.object({
 export const voteSchema = z.object({
   candidateId: z.string().min(1),
 });
+
+export const closeSessionSchema = z.object({
+  organizerId: z.string().min(1),
+});

@@ -7,18 +7,44 @@ import {
 } from '@/lib/validation';
 
 describe('createSessionSchema', () => {
-  it('有効な location を受け付ける', () => {
-    const result = createSessionSchema.safeParse({ location: '渋谷駅' });
+  it('有効な displayName と location を受け付ける', () => {
+    const result = createSessionSchema.safeParse({ displayName: '山田太郎', location: '渋谷駅' });
     expect(result.success).toBe(true);
   });
 
+  it('displayName が20文字を受け付ける', () => {
+    const result = createSessionSchema.safeParse({
+      displayName: 'a'.repeat(20),
+      location: '渋谷駅',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('displayName が21文字以上を拒否する', () => {
+    const result = createSessionSchema.safeParse({
+      displayName: 'a'.repeat(21),
+      location: '渋谷駅',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('空の displayName を拒否する', () => {
+    const result = createSessionSchema.safeParse({ displayName: '', location: '渋谷駅' });
+    expect(result.success).toBe(false);
+  });
+
+  it('displayName が未指定の場合を拒否する', () => {
+    const result = createSessionSchema.safeParse({ location: '渋谷駅' });
+    expect(result.success).toBe(false);
+  });
+
   it('空の location を拒否する', () => {
-    const result = createSessionSchema.safeParse({ location: '' });
+    const result = createSessionSchema.safeParse({ displayName: '山田太郎', location: '' });
     expect(result.success).toBe(false);
   });
 
   it('location が未指定の場合を拒否する', () => {
-    const result = createSessionSchema.safeParse({});
+    const result = createSessionSchema.safeParse({ displayName: '山田太郎' });
     expect(result.success).toBe(false);
   });
 });

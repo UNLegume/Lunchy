@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const createSessionSchema = z.object({
+  displayName: z.string().min(1).max(20),
   location: z.string().min(1),
 });
 

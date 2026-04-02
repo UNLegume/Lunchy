@@ -30,6 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# Playwright MCP
+.playwright-mcp/
+
 # OS
 .DS_Store
 *.pem

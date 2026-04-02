@@ -73,6 +73,7 @@ describe('joinSessionSchema', () => {
 
 describe('preferencesSchema', () => {
   const validPreferences = {
+    memberId: 'member-uuid',
     allergy: ['えび', '小麦'],
     category: 'meat' as const,
     hungerLevel: 5,
@@ -128,6 +129,18 @@ describe('preferencesSchema', () => {
   it('place が文字列でも受け付ける', () => {
     const result = preferencesSchema.safeParse({ ...validPreferences, place: '新宿駅近く' });
     expect(result.success).toBe(true);
+  });
+
+  it('memberId が未指定の場合を拒否する', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { memberId: _memberId, ...withoutMemberId } = validPreferences;
+    const result = preferencesSchema.safeParse(withoutMemberId);
+    expect(result.success).toBe(false);
+  });
+
+  it('空の memberId を拒否する', () => {
+    const result = preferencesSchema.safeParse({ ...validPreferences, memberId: '' });
+    expect(result.success).toBe(false);
   });
 });
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createSession, getSession, joinSession } from '@/lib/session-service';
+import { createSession, getSession, joinSession, submitPreferences } from '@/lib/session-service';
 import * as kv from '@/lib/kv';
 import { AppError } from '@/lib/errors';
 import type { Session } from '@/lib/types';
@@ -90,6 +90,105 @@ describe('joinSession', () => {
     await expect(joinSession('session-id', '鈴木花子')).rejects.toMatchObject({
       code: 'SESSION_CLOSED',
       statusCode: 400,
+    });
+  });
+});
+
+describe('submitPreferences', () => {
+  const mockSession: Session = {
+    id: 'session-id',
+    organizerId: 'organizer-id',
+    location: '渋谷駅',
+    status: 'gathering',
+    members: [
+      { id: 'organizer-id', displayName: '山田太郎', isOrganizer: true },
+      { id: 'member-id', displayName: '鈴木花子', isOrganizer: false },
+    ],
+    preferences: [],
+    candidates: [],
+    votes: [],
+    runoffVotes: [],
+    result: null,
+    createdAt: new Date().toISOString(),
+  };
+
+  const preferenceData = {
+    allergy: ['卵', '乳'],
+    category: 'meat' as const,
+    hungerLevel: 8,
+    place: 'dine-in',
+    budget: '~1000',
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(kv.getSession).mockResolvedValue(mockSession);
+    vi.mocked(kv.setSession).mockResolvedValue(undefined);
+  });
+
+  it('好みデータが正しく保存される', async () => {
+    const session = await submitPreferences('session-id', 'member-id', preferenceData);
+
+    expect(session.preferences).toHaveLength(1);
+    expect(session.preferences[0]).toMatchObject({
+      memberId: 'member-id',
+      ...preferenceData,
+    });
+    expect(kv.setSession).toHaveBeenCalledWith(
+      'session-id',
+      expect.objectContaining({
+        preferences: expect.arrayContaining([
+          expect.objectContaining({ memberId: 'member-id', category: 'meat' }),
+        ]),
+      }),
+    );
+  });
+
+  it('同一メンバーの再送信で上書きされる', async () => {
+    const existingPreference = {
+      memberId: 'member-id',
+      allergy: [],
+      category: 'fish' as const,
+      hungerLevel: 5,
+      place: null,
+      budget: 'any',
+    };
+    vi.mocked(kv.getSession).mockResolvedValue({
+      ...mockSession,
+      preferences: [existingPreference],
+    });
+
+    const session = await submitPreferences('session-id', 'member-id', preferenceData);
+
+    expect(session.preferences).toHaveLength(1);
+    expect(session.preferences[0]).toMatchObject({
+      memberId: 'member-id',
+      category: 'meat',
+    });
+  });
+
+  it('存在しないメンバーでエラー', async () => {
+    await expect(
+      submitPreferences('session-id', 'nonexistent-member', preferenceData),
+    ).rejects.toThrow(AppError);
+    await expect(
+      submitPreferences('session-id', 'nonexistent-member', preferenceData),
+    ).rejects.toMatchObject({
+      code: 'MEMBER_NOT_FOUND',
+      statusCode: 404,
+    });
+  });
+
+  it('gathering以外のステータスでエラー', async () => {
+    vi.mocked(kv.getSession).mockResolvedValue({ ...mockSession, status: 'voting' });
+
+    await expect(submitPreferences('session-id', 'member-id', preferenceData)).rejects.toThrow(
+      AppError,
+    );
+    await expect(
+      submitPreferences('session-id', 'member-id', preferenceData),
+    ).rejects.toMatchObject({
+      code: 'SESSION_CLOSED',
     });
   });
 });

@@ -10,6 +10,7 @@ export const joinSessionSchema = z.object({
 });
 
 export const preferencesSchema = z.object({
+  memberId: z.string().min(1),
   allergy: z.array(z.string()),
   category: z.enum(['meat', 'fish', 'other']),
   hungerLevel: z.number().int().min(0).max(10),
